@@ -19,7 +19,7 @@ export async function logoutFunction(){
 
   console.log(cookies.get('XSRF-TOKEN'))
   
-      const {data} = await axios.post('http://localhost:8000/api/logout', {
+      const {data} = await axios.post('http://localhost:8000/logout', {
         //email: 'g.artak@yahoo.com',
         //password: 'aaaaaaass'
       }, {

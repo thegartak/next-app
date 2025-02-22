@@ -1,4 +1,4 @@
-import { LoginField } from "../ui/login/login-field";
+import { LoginField } from "@/app/ui/login/login-field";
 
 export default function LoginPage() {
   return (

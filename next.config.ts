@@ -10,7 +10,15 @@ const nextConfig: NextConfig = {
         destination: 'http://localhost:8000/:path*'
       }
     ]
-  }
+  },
+  images: {
+    localPatterns: [
+      {
+        pathname: '/assets/images/**',
+        search: '',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

@@ -1,0 +1,14 @@
+.animatet{
+	
+/*animation: var(--animate-spin); /* spin 1s linear infinite */
+
+background: red;
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+}
+
+

@@ -180,7 +180,7 @@ export async function logoutEmployee(prevState: unknown, formData: FormData){
     if(oho !== undefined){
      // console.log(oho.value)
 
-      const data = await fetch('http://localhost:8000/api/logout', {
+      const data = await fetch('http://localhost:8000/logout', {
         headers: {
             Authorization: `Bearer ${oho.value}`,
             Accept: 'application/json',
@@ -200,45 +200,4 @@ export async function logoutEmployee(prevState: unknown, formData: FormData){
     }
 }
 
-export async function trying(prevState: unknown, formData: FormData){
-  const cookieStore = await cookies();
-  const poho = cookieStore.get('XSRF-TOKEN')
-  console.log('poho---------------')
-  console.log(poho)
-  console.log('poho---------------end')
-  const poho2 = cookieStore.get('app_session')
-  if(poho !== undefined && poho2 !== undefined){
-//  console.log(poho.value)
-//  console.log(poho2.value)
 
-  const data = await fetch('http://localhost:8000/api/trying', {
-    headers: {
-        'app_session': `${poho2.value}`,
-        'X-XSRF-TOKEN': 'eyJpdiI6ImpWc1p5MXhBTVR1ZDBqQWhYVTZUU1E9PSIsInZhbHVlIjoiK2dOWEVUcXVOdXhTUTV6ZlVCaUtna2hTdjFjT1BWdlNHWldGZnVvQ1VCY2sxTE1FOTV6OHoxQzlQVGlHQ1NjV0M1UnNKS1lVNWRlMUpFbmhnUlNNZS9pYlZjN2lKRWdIQWx5NjlYT0tUaytYdXdnMWd4OFpKQzVYT0lGa2tnZUwiLCJtYWMiOiIxZmZhNGRjMTMzZGY1M2M3ZTUyOGMwZmRiY2I2N2E2MTgwODU2MGVhY2EyMjg4ODJlOGQ1N2RhZWFlZWE1ZmU0IiwidGFnIjoiIn0',
-        Accept: 'application/json',
-      },
-      method: "POST",
-    //  body: formData,
-    //  body: formData,
-     credentials: 'include'
-    });
-
-    const posts = await data.json();
-    return posts;
-
-
-
-/*
-    const {data} = await axios.post('http://localhost:8000/api/trying',  {
-      headers: {
-        'X-XSRF-TOKEN': 'eyJpdiI6ImpWc1p5MXhBTVR1ZDBqQWhYVTZUU1E9PSIsInZhbHVlIjoiK2dOWEVUcXVOdXhTUTV6ZlVCaUtna2hTdjFjT1BWdlNHWldGZnVvQ1VCY2sxTE1FOTV6OHoxQzlQVGlHQ1NjV0M1UnNKS1lVNWRlMUpFbmhnUlNNZS9pYlZjN2lKRWdIQWx5NjlYT0tUaytYdXdnMWd4OFpKQzVYT0lGa2tnZUwiLCJtYWMiOiIxZmZhNGRjMTMzZGY1M2M3ZTUyOGMwZmRiY2I2N2E2MTgwODU2MGVhY2EyMjg4ODJlOGQ1N2RhZWFlZWE1ZmU0IiwidGFnIjoiIn0',
-      //  'app_session': `${poho2.value}`,
-        Accept: 'application/json',
-      },
-      withCredentials: true,
-    })
-    console.log(data)
-  */
-  
-  }
-};
