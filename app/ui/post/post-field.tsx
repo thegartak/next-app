@@ -25,7 +25,36 @@ export function PostField(){
   const [id, setId] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [bodyText, setBodyText] = useState<string>('');
+  const [post, setPost] = useState([]);
   const cookies = new Cookies(null, { path: '/' });
+
+    async function getPostFnc() {
+      const {data} = await axios.get('http://localhost:8000/posts', {
+        headers: {
+          'X-XSRF-TOKEN': cookies.get('XSRF-TOKEN'),
+        //  'app_session': `${poho2.value}`,
+          Accept: 'application/json',
+        },
+        withCredentials: true,
+      })
+      console.log(data)
+      setPost(data);
+      
+    }
+
+    async function getPostByFnc(id: number) {
+      const {data} = await axios.get(`http://localhost:8000/posts/${id}`, {
+        headers: {
+          'X-XSRF-TOKEN': cookies.get('XSRF-TOKEN'),
+        //  'app_session': `${poho2.value}`,
+          Accept: 'application/json',
+        },
+        withCredentials: true,
+      })
+      console.log(data)
+    //  setPost(data);
+      
+    }
 
 
     async function postFnc() {
@@ -34,7 +63,7 @@ export function PostField(){
   
 
 
-        const {data} = await axios.post('http://localhost:8000/api/posts', {
+        const {data} = await axios.post('http://localhost:8000/posts', {
           title: title,
           body: bodyText
         }, {
@@ -49,7 +78,8 @@ export function PostField(){
     }
 
     async function updatePostFnc(){
-      const {data} = await axios.put(`http://localhost:8000/api/posts/${id}`, {
+      console.log(cookies.get('XSRF-TOKEN'));
+      const {data} = await axios.put(`http://localhost:8000/posts/${id}`, {
         title: title,
         body: bodyText
       }, {
@@ -76,7 +106,26 @@ export function PostField(){
     
     <button className="w-40 border-blue-800 border-2 rounded-md bg-gray-800 text-white" onClick={postFnc}>Post Article</button>
     <button className="w-40 border-blue-800 border-2 rounded-md bg-blue-800 text-white" onClick={updatePostFnc}>Update Post</button>
+    <button className="w-40 border-green-800 border-2 rounded-md bg-green-400 text-white" onClick={getPostFnc}>Get Post</button>
 
+    <table>  
+      <tbody>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Body</th>
+          <th>User ID</th>
+        </tr>
+        {post.map((data: any) => 
+          <tr key={data.id}>
+            <td className="border-blue-800 border-2" onClick={() => getPostByFnc(data.id)}>{data.id}</td>
+            <td className="border-blue-800 border-2">{data.title}</td>
+            <td className="border-blue-800 border-2">{data.body}</td>
+            <td className="border-blue-800 border-2">{data.user_id}</td>
+          </tr>
+        )}
+        </tbody> 
+    </table>
   </>
   )
 }

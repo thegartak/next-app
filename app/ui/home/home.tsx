@@ -4,15 +4,27 @@ import {useState, useEffect, useActionState, useLayoutEffect} from 'react';
 import Link from 'next/link';
 import Image from "next/image";
 import Form from 'next/form';
+
+
+import {useAppDispatch, useAppSelector} from '@/app/hooks';
+
+
+
+
+import {increment} from '@/app/features/counter/counter-slice';
+import { useFetchBreedsQuery } from '@/app/features/dogs/dogs-api-slice';
+
 import {loginEmployee} from '@/app/actions';
+
 
 import axios from "axios";
 import Cookies from 'universal-cookie';
 import { redirect } from 'next/navigation';
-import { sanctum, sanctumCheckToken } from '@/app/sanctum';
+import { sanctumCheckToken } from '@/app/sanctum-token';
 import { LogoutField } from "@/app/ui/login/logout-field";
-import { Trying } from "@/app/ui/trying/trying";
 import { PostField} from "@/app/ui/post/post-field";
+
+import  styles  from '@/app/global-css/loading.module.css';
 //import { cookies } from 'next/headers';
 /*interface DataType {
   id: number,
@@ -27,6 +39,11 @@ interface LoginForm {
 
 export function Home(){
  
+  const count = useAppSelector((state) => state.counter.value);
+  const dispatch = useAppDispatch();
+
+  const {data, isFetching, } = useFetchBreedsQuery();
+
   const cookies = new Cookies(null, { path: '/' });
   const [guard, setGuard] = useState(false); 
 
@@ -40,17 +57,22 @@ export function Home(){
   const [password, setPassword] = useState<string>('');
   const [cook, setCook] =useState('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
-  const [data, setData] = useState([{
+  /*const [data, setData] = useState([{
     id: 0,
     name: '',
     job: ''
-  }]);
-
+  }]);*/
+  const photos: number[] = [1, 2, 3, 4];
 
 
   /*const logiknFnc = () => {   
     setData([...data, {firstName, lastName, email}])
   }*/
+
+  const incr = () => {
+    dispatch(increment());
+  }
+
 
 async function view(){
   const {data} = await axios.get('http://localhost:8000/api/users', {
@@ -67,22 +89,26 @@ async function view(){
 
   useEffect(() => {
 
+/*
     try{
-      // if(cookies.get('XSRF-TOKEN') !== undefined){
-           const res = sanctumCheckToken(cookies.get('XSRF-TOKEN'));
+ 
+        const res = sanctumCheckToken();
           res.then((data: any) => {
-            if(data && data.user_id){
+            console.log(data);
+           // if(data && data.user_id){
               setGuard(true);
-            }
-           console.log(data);
-           if(data.status === 403){
-             redirect('/login');
+           // }
+           
+           if(data && data.status === 403){
+              redirect('/login');
            }
+          }).catch(err => {
+            redirect('/login');
           })
           
            //console.log(some)
           // redirect('/login');
-       //}
+       
      }catch(err){
       
        console.log(err)
@@ -94,27 +120,45 @@ async function view(){
   //view();
 
 
-
+*/
 
   },[]);
 
   return(
 
  
-    <>
-  
-{guard &&
 
+  <>
+{(data !== undefined &&  data?.length > 0) ?
+ 
 <div>
+
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
        NextJs Main page 
-       </main>      
+       </main>   
+
+
+
+      <h1>data length: {data?.length}</h1>
+
+
+
+       <div  className="text-center">
+        {photos.map((data, key) => {
+          return(
+            <Link key={key} href={`/photo`} ><span className="p-4">{data}</span></Link>
+          )
+        })
+        }
+      </div> 
+
+
+
     <h1 className="text-blue-700">Home</h1>
     
     <LogoutField />
     <span>look: </span>
-    <Trying />
     <PostField />
 
     <div>
@@ -152,14 +196,21 @@ async function view(){
             width={16}
             height={16}
           />
-          Go to nextjs.org →
+          Go to nextjs.org → {count} <button onClick={incr}>Increment</button>
         </span>
       </footer>
     </div>
+
+:
+<button type="button" className={styles.animatet} disabled>  
+  <svg className="mr-3 size-5 animate-spin" viewBox="0 0 24 24"></svg>  
+  Processing…
+</button>
+
 }
 
 
-  </>
+</>
     
   )
 }
